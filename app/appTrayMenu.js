@@ -5,7 +5,7 @@ const overlay = require('./appOverlay');
 
 let appIcon = null;
 const iconOnline = path.join(global.dir.images, 'tray/macos/', 'icon.png');
-const iconOffline = path.join(global.dir.images, 'tray/macos/', 'icon-offline.png');
+const iconOffline = path.join(global.dir.images, 'tray/macos/', 'icon-red.png');
 const iconHighlightPath = path.join(global.dir.images, 'iconHighlight.png');
 
 refreshVmStatus = function (contextMenu, appIcon) {

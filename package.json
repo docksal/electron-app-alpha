@@ -1,0 +1,9 @@
+{
+  "name": "docksal-ui",
+  "productName": "Docksal UI",
+  "version": "0.1.0",
+  "main": "main.js",
+  "dependencies": {
+    "fix-path": "^2.1.0"
+  }
+}

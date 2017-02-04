@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+  </head>
+  <body>
+  <style type="text/css">
+    #stdout {
+      width:800px;
+      height:300px;
+      background: black;
+      color: silver;
+      font-family: 'Courier New';
+      font-size: 13px;
+    }
+  </style>
+  <textarea id="stdout"></textarea>
+
+  <script type="text/javascript">
+    function finPS() {
+      const spawn = require('child_process').spawn
+      // windows 
+      // const ps = spawn('cmd', ['/c', '%USERPROFILE%/.babun/cygwin/bin/bash.exe', '-ic', '/usr/local/bin/fin ps -a'])
+      const ps = spawn('fin', ['ps', '-a'])
+      ps.stdout.on('data', (data) => {
+        document.getElementById('stdout').innerText = data;
+        console.log(`stdout: ${data}`);
+      });
+    }
+  </script>
+
+  <input type="button" name="ClickMe" value="Click Me" onclick="finPS()">
+
+
+  </body>
+</html>

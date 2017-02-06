@@ -14,6 +14,7 @@ global.dir.images = path.join(__dirname, 'images');
 global.dir.bash = path.join(__dirname, 'bash');
 global.dir.app = path.join(__dirname, 'app');
 global.dir.html = path.join(__dirname, 'app', 'html');
+// global.dir.lib = path.join(__dirname, 'lib');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -63,15 +64,20 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-})
+});
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (win === null) {
-    createWindow()
-  }
-})
+  // if (win === null) {
+  //   createWindow()
+  // }
+});
+
+app.on('login', function(event, webContents, request, authInfo, callback) {
+  event.preventDefault();
+  callback('docksal', 'docksal');
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

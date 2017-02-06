@@ -34,7 +34,7 @@ exports.vmStop = (callback) => {
     const stopVm = path.join(global.dir.bash, 'stop-vm.sh');
     const ps = spawn('/usr/bin/open', ['-a', 'Terminal', stopVm ]);
     pid.watch('stopvm', () => {
-      global.log.info('[docksal-vm] VM has stopped');
+      global.log.info('VM has stopped');
       callback();
     });
   });
@@ -49,15 +49,23 @@ exports.vmStart = (callback) => {
     const startVm = path.join(global.dir.bash, 'start-vm.sh');
     const ps = spawn('/usr/bin/open', ['-a', 'Terminal', startVm ]);
     pid.watch('startvm', () => {
-      global.log.info('[docksal-vm] VM has started');
+      global.log.info('VM has started');
       callback();
     });
   });
 };
 
-// docker run -d --name webui --restart=always --privileged --userns=host \
-// --label "io.docksal.group=system" --label "io.docksal.virtual-host=webui.docksal" \
-// --env "VIRTUAL_HOST=webui.docksal" \
-// -v /:/rootfs:ro -v /var/run:/var/run:rw -v /sys:/sys:ro -v /var/lib/docker/:/var/lib/docker:ro \
-// --expose 80 --expose 443 \
-// docksal/webui
+/**
+ * Open WebUI
+ * @param {function()} callback
+ */
+exports.webui = (callback) => {
+  pid.create('webui', () => {
+    const webuiStart = path.join(global.dir.bash, 'webui.sh');
+    const ps = spawn('/usr/bin/open', ['-a', 'Terminal', webuiStart ]);
+    pid.watch('webui', () => {
+      global.log.info('WEBUI has started');
+      callback();
+    });
+  });
+};

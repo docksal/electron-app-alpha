@@ -6,6 +6,7 @@ const {app, Tray, Menu} = require('electron');
 const path = require('path');
 const docksal = require('./docksal-cli');
 const overlay = require('./overlay');
+const browser = require('./browser');
 
 let appIcon = null;
 const iconOnline = path.join(global.dir.images, 'tray/macos/', 'icon.png');
@@ -56,7 +57,11 @@ exports.create = () =>{
       label: 'Open WebUI',
       enabled: false,
       click: function() {
-        //
+        contextMenu.items[2].enabled = false; // disable self
+        docksal.webui(() => {
+          contextMenu.items[2].enabled = true;
+          browser.openWebui();
+        });
       }
     },
     {
@@ -91,7 +96,7 @@ exports.create = () =>{
   appIcon.setContextMenu(contextMenu);
 
   refreshMenuVM(contextMenu, appIcon);
-  setTimeout(() => overlay.hide(), 1000);
+  setTimeout(() => overlay.hide(), 500);
   // setInterval(() => {
   //   refreshVmStatus(contextMenu, appIcon);
   // }, 2000);

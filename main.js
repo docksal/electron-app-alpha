@@ -10,10 +10,10 @@ fixPath();
 
 // Global dir references to use in the app
 global.dir = {}; // global object to store paths to dirs
-global.dir.images = path.join(__dirname, 'images/');
-global.dir.bash = path.join(__dirname, 'bash/');
-global.dir.app = path.join(__dirname, 'app/');
-global.dir.html = path.join(__dirname, 'app/html/');
+global.dir.images = path.join(__dirname, 'images');
+global.dir.bash = path.join(__dirname, 'bash');
+global.dir.app = path.join(__dirname, 'app');
+global.dir.html = path.join(__dirname, 'app', 'html');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

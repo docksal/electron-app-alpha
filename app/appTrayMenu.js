@@ -37,7 +37,9 @@ exports.create = () =>{
       enabled: false,
       click: function(){
         contextMenu.items[0].enabled = false; // disable self
-        docksalVm.start();
+        docksalVm.start(() => {
+          refreshVmStatus(contextMenu, appIcon);
+        });
       }
     },
     {
@@ -45,7 +47,9 @@ exports.create = () =>{
       enabled: false,
       click: function() {
         contextMenu.items[1].enabled = false; // disable self
-        docksalVm.stop();
+        docksalVm.stop(() => {
+          refreshVmStatus(contextMenu, appIcon);
+        });
       }
     },
     // {
@@ -77,8 +81,8 @@ exports.create = () =>{
   appIcon.setContextMenu(contextMenu);
 
   refreshVmStatus(contextMenu, appIcon);
-  setInterval(() => {
-    refreshVmStatus(contextMenu, appIcon);
-  }, 2000);
+  // setInterval(() => {
+  //   refreshVmStatus(contextMenu, appIcon);
+  // }, 2000);
 
 };

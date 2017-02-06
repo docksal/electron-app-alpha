@@ -20,12 +20,12 @@ global.dir.html = path.join(__dirname, 'app', 'html');
 let win;
 
 // Logging object
-global.log = require('./app/appLog');
+global.log = require('./app/log');
 global.log.start(); // comment out line to stop logging
 
 function appOnReady() {
   //createWindow();
-  require('./app/appTrayMenu').create();
+  require('./app/tray-menu').create();
 }
 
 function createWindow () {

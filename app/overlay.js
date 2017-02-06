@@ -54,5 +54,6 @@ exports.show = (message) => {
 };
 
 exports.hide = () => {
-  appOverlayWin.hide();
+//  appOverlayWin.hide();
+  appOverlayWin.close();
 };

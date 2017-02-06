@@ -4,15 +4,15 @@
 
 const {app, Tray, Menu} = require('electron');
 const path = require('path');
-const docksalVm = require('./docksalVm');
-const overlay = require('./appOverlay');
+const docksalVm = require('./docksal-vm');
+const overlay = require('./overlay');
 
 let appIcon = null;
 const iconOnline = path.join(global.dir.images, 'tray/macos/', 'icon.png');
 const iconOffline = path.join(global.dir.images, 'tray/macos/', 'icon-red.png');
 const iconHighlightPath = path.join(global.dir.images, 'iconHighlight.png');
 
-refreshVmStatus = function (contextMenu, appIcon) {
+refreshMenuVM = function (contextMenu, appIcon) {
   docksalVm.getStatus((isRunning) => {
     contextMenu.items[0].enabled = !isRunning;
     contextMenu.items[1].enabled = isRunning;
@@ -21,7 +21,6 @@ refreshVmStatus = function (contextMenu, appIcon) {
     } else {
       appIcon.setImage(iconOnline);
     }
-    overlay.hide();
   });
 };
 
@@ -38,7 +37,7 @@ exports.create = () =>{
       click: function(){
         contextMenu.items[0].enabled = false; // disable self
         docksalVm.start(() => {
-          refreshVmStatus(contextMenu, appIcon);
+          refreshMenuVM(contextMenu, appIcon);
         });
       }
     },
@@ -48,7 +47,7 @@ exports.create = () =>{
       click: function() {
         contextMenu.items[1].enabled = false; // disable self
         docksalVm.stop(() => {
-          refreshVmStatus(contextMenu, appIcon);
+          refreshMenuVM(contextMenu, appIcon);
         });
       }
     },
@@ -80,7 +79,8 @@ exports.create = () =>{
   appIcon.setToolTip('Docksal UI');
   appIcon.setContextMenu(contextMenu);
 
-  refreshVmStatus(contextMenu, appIcon);
+  refreshMenuVM(contextMenu, appIcon);
+  setTimeout(() => overlay.hide(), 1000);
   // setInterval(() => {
   //   refreshVmStatus(contextMenu, appIcon);
   // }, 2000);

@@ -2,22 +2,21 @@ const spawn = require('child_process').spawn;
 const path = require('path');
 const fs = require('fs');
 
-fs.writeFileSync('/tmp/docksal-ui.log', process.env.PATH);
-fs.writeFileSync('/tmp/docksal-ui.err', '');
+global.log.debug(process.env.PATH);
 
 /**
  * Get vm status
  * @param {function(isRunning:boolean)} callback
  */
 exports.getStatus = (callback) => {
-  const ps = spawn('/bin/bash', ['/usr/local/bin/fin', 'vm', 'status']);
+  const ps = spawn(process.env.HOME + '/.docksal/bin/docker-machine', ['status', 'docksal']);
   ps.stdout.on('data', (data) => {
     data = `${data}`;
-    fs.writeFileSync('/tmp/docksal-ui.log', data, {flag: 'a'});
+    global.log.debug("[[docksalVm]] " + data);
     callback(data.indexOf("Running") >= 0);
   });
   ps.stderr.on('data', (data) => {
-    fs.writeFileSync('/tmp/docksal-ui.err', data);
+    global.log.debug("[[docksalVm]] " + data);
   });
 };
 

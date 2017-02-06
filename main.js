@@ -2,11 +2,13 @@ const {app, Tray, Menu, BrowserWindow} = require('electron');
 const path = require('path');
 const url = require('url');
 const spawn = require('child_process').spawn;
+
 // fixPath - inherit $PATH defined in shell
 // https://github.com/electron/electron/issues/550#issuecomment-162037357
 const fixPath = require('fix-path');
 fixPath();
 
+// Global dir references to use in the app
 global.dir = {}; // global object to store paths to dirs
 global.dir.images = path.join(__dirname, 'images/');
 global.dir.bash = path.join(__dirname, 'bash/');
@@ -16,6 +18,10 @@ global.dir.html = path.join(__dirname, 'app/html/');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+
+// Logging object
+global.log = require('./app/appLog');
+global.log.start(); // comment out line to stop logging
 
 function appOnReady() {
   //createWindow();

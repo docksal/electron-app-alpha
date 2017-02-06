@@ -13,7 +13,7 @@ global.log.debug(process.env.PATH);
  * Get vm status
  * @param {function(isRunning:boolean)} callback
  */
-exports.getStatus = (callback) => {
+exports.vmStatus = (callback) => {
   const ps = spawn(process.env.HOME + '/.docksal/bin/docker-machine', ['status', 'docksal']);
   ps.stdout.on('data', (data) => {
     data = `${data}`;
@@ -29,12 +29,12 @@ exports.getStatus = (callback) => {
  * Stop vm
  * @param {function()} callback
  */
-exports.stop = (callback) => {
+exports.vmStop = (callback) => {
   pid.create('stopvm', () => {
     const stopVm = path.join(global.dir.bash, 'stop-vm.sh');
     const ps = spawn('/usr/bin/open', ['-a', 'Terminal', stopVm ]);
     pid.watch('stopvm', () => {
-      global.log.info('[docksalVm] VM has stopped');
+      global.log.info('[docksal-vm] VM has stopped');
       callback();
     });
   });
@@ -44,13 +44,20 @@ exports.stop = (callback) => {
  * Start vm
  * @param {function()} callback
  */
-exports.start = (callback) => {
+exports.vmStart = (callback) => {
   pid.create('startvm', () => {
     const startVm = path.join(global.dir.bash, 'start-vm.sh');
     const ps = spawn('/usr/bin/open', ['-a', 'Terminal', startVm ]);
     pid.watch('startvm', () => {
-      global.log.info('[docksalVm] VM has started');
+      global.log.info('[docksal-vm] VM has started');
       callback();
     });
   });
 };
+
+// docker run -d --name webui --restart=always --privileged --userns=host \
+// --label "io.docksal.group=system" --label "io.docksal.virtual-host=webui.docksal" \
+// --env "VIRTUAL_HOST=webui.docksal" \
+// -v /:/rootfs:ro -v /var/run:/var/run:rw -v /sys:/sys:ro -v /var/lib/docker/:/var/lib/docker:ro \
+// --expose 80 --expose 443 \
+// docksal/webui

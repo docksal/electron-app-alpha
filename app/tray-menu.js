@@ -4,7 +4,7 @@
 
 const {app, Tray, Menu} = require('electron');
 const path = require('path');
-const docksalVm = require('./docksal-vm');
+const docksal = require('./docksal-cli');
 const overlay = require('./overlay');
 
 let appIcon = null;
@@ -13,9 +13,10 @@ const iconOffline = path.join(global.dir.images, 'tray/macos/', 'icon-red.png');
 const iconHighlightPath = path.join(global.dir.images, 'iconHighlight.png');
 
 refreshMenuVM = function (contextMenu, appIcon) {
-  docksalVm.getStatus((isRunning) => {
-    contextMenu.items[0].enabled = !isRunning;
-    contextMenu.items[1].enabled = isRunning;
+  docksal.vmStatus((isRunning) => {
+    contextMenu.items[0].enabled = !isRunning; // Start VM
+    contextMenu.items[1].enabled = isRunning; // Stop VM
+    contextMenu.items[2].enabled = isRunning; // Open WebUI
     if (!isRunning) {
       appIcon.setImage(iconOffline);
     } else {
@@ -36,7 +37,7 @@ exports.create = () =>{
       enabled: false,
       click: function(){
         contextMenu.items[0].enabled = false; // disable self
-        docksalVm.start(() => {
+        docksal.vmStart(() => {
           refreshMenuVM(contextMenu, appIcon);
         });
       }
@@ -46,10 +47,20 @@ exports.create = () =>{
       enabled: false,
       click: function() {
         contextMenu.items[1].enabled = false; // disable self
-        docksalVm.stop(() => {
+        docksal.vmStop(() => {
           refreshMenuVM(contextMenu, appIcon);
         });
       }
+    },
+    {
+      label: 'Open WebUI',
+      enabled: false,
+      click: function() {
+        //
+      }
+    },
+    {
+      type: 'separator'
     },
     // {
     //   label: 'Refresh',

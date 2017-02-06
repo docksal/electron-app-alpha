@@ -1,3 +1,7 @@
+/**
+ * Small overlay window to show information about some current process
+ */
+
 const {BrowserWindow} = require('electron');
 const path = require('path');
 const url = require('url');

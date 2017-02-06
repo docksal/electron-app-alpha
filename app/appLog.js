@@ -1,3 +1,7 @@
+/**
+ * Global Logging. Disabled by default.
+ */
+
 const path = require('path');
 const fs = require('fs');
 

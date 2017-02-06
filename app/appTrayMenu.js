@@ -1,3 +1,7 @@
+/**
+ * Controls tray and tray menu
+ */
+
 const {app, Tray, Menu} = require('electron');
 const path = require('path');
 const docksalVm = require('./docksalVm');

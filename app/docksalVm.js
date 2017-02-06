@@ -1,3 +1,7 @@
+/**
+ * Docksal VM related functions
+ */
+
 const spawn = require('child_process').spawn;
 const path = require('path');
 const fs = require('fs');

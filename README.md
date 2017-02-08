@@ -4,19 +4,10 @@ These aren't the droids you're looking for...
 
 ## Requirements
 
-macOS 10.12+
+Runs on:
 
-## Compiling
-
-Install [electron-packager](https://github.com/electron-userland/electron-packager) globally
-```
-npm install electron-packager -g
-```
-
-Run
-```
-./build-app.sh
-```
+- macOS 10.12+
+- Windows 7+
 
 ## Running from sources
 
@@ -28,4 +19,36 @@ npm install electron -g
 Run
 ```
 electron .
+```
+
+## Compiling
+
+Compiling instructions for macOS 10.12+
+
+### Compiling native platform version
+
+Install [electron-packager](https://github.com/electron-userland/electron-packager) globally
+```
+npm install electron-packager -g
+```
+
+Run
+```
+./build-app.sh
+```
+
+### Compiling win32 version on macOS
+
+1\. Install/update XCode to the latest version (takes a while).
+
+2\. Install [Homebrew](http://brew.sh/)
+
+3\. Install wine  (takes a while)
+```
+brew install wine
+```
+
+4\. Run
+```
+./build-app.sh win32
 ```

@@ -28,7 +28,7 @@ refreshMenuVM = function (contextMenu, appIcon) {
 
 exports.create = () =>{
   overlay.show('Starting Docksal UI...');
-  app.dock.hide(); // hide from Dock
+  typeof app.dock != 'undefined' && app.dock.hide(); // hide from Dock
   appIcon = new Tray(iconOffline);
   //appIcon.setPressedImage(iconHighlightPath);
 
@@ -89,14 +89,16 @@ exports.create = () =>{
     {
       label: 'Quit',
       accelerator: 'Command+Q',
-      selector: 'terminate:',
+      click: () => {
+        app.exit();
+      },
     }
   ]);
   appIcon.setToolTip('Docksal UI');
   appIcon.setContextMenu(contextMenu);
 
   refreshMenuVM(contextMenu, appIcon);
-  setTimeout(() => overlay.hide(), 500);
+  setTimeout(() => overlay.hide(), 1500);
   // setInterval(() => {
   //   refreshVmStatus(contextMenu, appIcon);
   // }, 2000);

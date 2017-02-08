@@ -1,6 +1,17 @@
 const fs = require('fs');
+const os = require('os');
 
-const prefix = '/tmp/pid.docksal.';
+let prefix;
+
+switch (os.platform()) {
+  case 'win32':
+    prefix = 'C:\\Users\\' + process.env.USERNAME + '\\.babun\\cygwin\\tmp\\pid.docksal.';
+    break;
+  default:
+    prefix = '/tmp/pid.docksal.';
+    break;
+}
+
 /**
  * Starts watching a file and executes the callback when that file gets deleted
  * @param action

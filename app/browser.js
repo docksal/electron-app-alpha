@@ -45,7 +45,7 @@ exports.open = (pathname, protocol) => {
     slashes: true
   }));
 
-  app.dock.show();
+  typeof app.dock != 'undefined' && app.dock.show();
   win.once('ready-to-show', () => {
     win.show();
     //appOverlayWin.webContents.openDevTools()
@@ -57,7 +57,7 @@ exports.open = (pathname, protocol) => {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     windows[webuiIndex] = null;
-    app.dock.hide();
+    typeof app.dock != 'undefined' && app.dock.hide();
   });
 };
 

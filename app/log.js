@@ -4,9 +4,21 @@
 
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
-const LOGFILE = '/tmp/docksal-ui.log';
-const ERRFILE = '/tmp/docksal-ui.err';
+let LOGS_FOLDER;
+
+switch (os.platform()) {
+  case 'win32':
+    LOGS_FOLDER = 'C:\\Users\\' + process.env.USERNAME + '\\.babun\\cygwin\\tmp';
+    break;
+  default:
+    LOGS_FOLDER = '/tmp';
+    break;
+}
+
+const LOGFILE = path.join(LOGS_FOLDER, 'docksal-ui.log');
+const ERRFILE = path.join(LOGS_FOLDER, 'docksal-ui.err');
 
 let debugEnabled = false;
 let errorLevel = 0;
@@ -35,14 +47,17 @@ exports.log = (level, msg) => {
 };
 
 exports.debug = (msg) => {
+  msg = msg + ''
   exports.log(DEBUG, msg);
 };
 
 exports.info = (msg) => {
+  msg = msg + ''
   exports.log(INFO, msg);
 };
 
 exports.warn = (msg) => {
+  msg = msg + ''
   exports.log(WARN, msg);
 };
 

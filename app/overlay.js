@@ -21,15 +21,16 @@ exports.show = (message) => {
   appOverlayWin = new BrowserWindow({
     width: 400,
     height: 200,
+    frame: false,
     titleBarStyle: 'hidden',
-    show: false,
+    show: true,
     backgroundColor: '#2b2b2b',
     center: true,
     movable: false,
     resizable: false,
     maximizable: false,
     // closable: false, setting this creates issues closing the app
-    skipTaskbar: true
+    //skipTaskbar: true
   });
 
   // and load the index.html of the app.
@@ -54,6 +55,6 @@ exports.show = (message) => {
 };
 
 exports.hide = () => {
-//  appOverlayWin.hide();
-  appOverlayWin.close();
+  appOverlayWin.hide();
+//  appOverlayWin.close();
 };

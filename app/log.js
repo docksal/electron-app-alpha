@@ -31,7 +31,7 @@ const ERROR = 3;
 exports.log = (level, msg) => {
   if (!debugEnabled || errorLevel > level) return;
   let fileName = "";
-  let prefix = '';
+  let prefix;
   (level == INFO) ? prefix = '<INFO> ' : 0;
   (level == WARN) ? prefix = '<WARN> ' : 0;
   (level == ERROR) ? prefix = '<ERROR> ' : 0;

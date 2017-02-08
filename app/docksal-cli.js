@@ -53,7 +53,8 @@ function cross_os_open(script) {
       break;
     case 'win32':
       const _bash = path.join(process.env.USERPROFILE,'.babun','cygwin','bin','bash.exe');
-      return spawn('cmd', ['/c', 'start', 'cmd', '/c', _bash, '-ic', script]);
+      // spaces in script path need to be escaped
+      return spawn('cmd', ['/c', 'start', 'cmd', '/c', _bash, '-ic', script.replace(' ', '\\ ')]);
       break;
     case 'linux':
       break;

@@ -8,6 +8,7 @@ Runs on:
 
 - macOS 10.12+
 - Windows 7+
+- Ubuntu 14.04
 
 ## Running from sources
 
@@ -51,4 +52,10 @@ brew install wine
 4\. Run
 ```
 ./build-app.sh win32
+```
+
+### Compiling Ubuntu version on macOS
+
+```
+./build-app.sh linux
 ```

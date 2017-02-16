@@ -13,8 +13,34 @@ const iconOnline = path.join(global.dir.images, 'tray/macos/', 'icon.png');
 const iconOffline = path.join(global.dir.images, 'tray/macos/', 'icon-red.png');
 const iconHighlightPath = path.join(global.dir.images, 'iconHighlight.png');
 
+const isLinux = (process.platform === 'linux');
+
+// Tray on Ubuntu will not work without libappindicator1
+
+function checkLinuxTraySupport (cb) {
+  require('child_process').exec('dpkg --get-selections libappindicator1', function (err, stdout) {
+    if (err) return cb(false);
+    cb(stdout.endsWith('\tinstall\n'));
+  })
+}
+
+if (isLinux) {
+  checkLinuxTraySupport(function (supportsTray) {
+    if (!supportsTray) {
+      console.log('[ERROR] libappindicator1 is not installed. Install it with apt-get first. Aborting.');
+      app.exit();
+    }
+  })
+}
+
+/**
+ * Refreshes menu after VM updates
+ * @param contextMenu
+ * @param appIcon
+ */
 refreshMenuVM = function (contextMenu, appIcon) {
   docksal.vmStatus((isRunning) => {
+    global.log.debug('(tray-menu.js): redrawing, isRunning ' + isRunning);
     contextMenu.items[0].enabled = !isRunning; // Start VM
     contextMenu.items[1].enabled = isRunning; // Stop VM
     contextMenu.items[2].enabled = isRunning; // Open WebUI
@@ -23,6 +49,8 @@ refreshMenuVM = function (contextMenu, appIcon) {
     } else {
       appIcon.setImage(iconOnline);
     }
+    // on Linux there's a need to call this after each menu update
+    isLinux && appIcon.setContextMenu(contextMenu);
   });
 };
 
@@ -34,7 +62,7 @@ exports.create = () =>{
 
   let contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Start VM',
+      label: isLinux ? 'Start Docker' : 'Start VM',
       enabled: false,
       click: function(){
         contextMenu.items[0].enabled = false; // disable self
@@ -44,7 +72,7 @@ exports.create = () =>{
       }
     },
     {
-      label: 'Stop VM',
+      label: isLinux ? 'Stop Docker' : 'Stop VM',
       enabled: false,
       click: function() {
         contextMenu.items[1].enabled = false; // disable self

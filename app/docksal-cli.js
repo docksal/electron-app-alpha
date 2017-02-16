@@ -8,7 +8,9 @@ const fs = require('fs');
 const os = require('os');
 const pid = require('./pid-watcher');
 
-global.log.debug(process.env.PATH);
+const isLinux = (process.platform === 'linux');
+
+global.log.verbose('[PATH]: ' + process.env.PATH);
 
 // // Path to UNIX home directory
 // const USERHOME = (() => {
@@ -42,6 +44,7 @@ function cross_os_spawn(file, args) {
       return spawn(_bash, ['-c', file + ' ' + args.join(' ')]);
       break;
     case 'linux':
+      return spawn(file, args, {shell:true});
       break;
   }
 }
@@ -57,6 +60,7 @@ function cross_os_open(script) {
       return spawn('cmd', ['/c', 'start', 'cmd', '/c', _bash, '-ic', script.replace(' ', '\\ ')]);
       break;
     case 'linux':
+      return spawn('gnome-terminal', ['-e', "bash -c " + script]);
       break;
   }
 }
@@ -66,14 +70,27 @@ function cross_os_open(script) {
  * @param {function(isRunning:boolean)} callback
  */
 exports.vmStatus = (callback) => {
-  const ps = cross_os_spawn('~/.docksal/bin/docker-machine', ['status', 'docksal']);
+  let ps;
+  if (isLinux) {
+    ps = cross_os_spawn('docker', ['info']);
+  } else {
+    ps = cross_os_spawn('~/.docksal/bin/docker-machine', ['status', 'docksal']);
+  }
+
+  let stderr = '';
   ps.stdout.on('data', (data) => {
     data = `${data}`;
-    global.log.debug("[docksalVm] " + data);
+    global.log.verbose("(docksal-cli.js): " + data);
     callback(data.indexOf("Running") >= 0);
   });
   ps.stderr.on('data', (data) => {
-    global.log.error("[docksalVm] " + data);
+    stderr += `${data}`;
+  });
+  ps.on('close', (code) => {
+    if (`${code}` != "0") {
+      global.log.error("(docksal-cli.js): " + stderr);
+      callback(false);
+    }
   });
 };
 
@@ -83,10 +100,12 @@ exports.vmStatus = (callback) => {
  */
 exports.vmStop = (callback) => {
   pid.create('stopvm', () => {
-    const stopVm = cygpath(path.join(global.dir.bash, 'stop-vm.sh'));
+    const stopVm = isLinux ?
+      path.join(global.dir.bash, 'stop-docker.sh') :
+      cygpath(path.join(global.dir.bash, 'stop-vm.sh'));
     const ps = cross_os_open(stopVm);
     pid.watch('stopvm', () => {
-      global.log.info('VM has stopped');
+      global.log.info('(docksal-cli.js) stopvm has finished');
       callback();
     });
   });
@@ -98,10 +117,12 @@ exports.vmStop = (callback) => {
  */
 exports.vmStart = (callback) => {
   pid.create('startvm', () => {
-    const startVm = cygpath(path.join(global.dir.bash, 'start-vm.sh'));
+    const startVm = isLinux ?
+      path.join(global.dir.bash, 'start-docker.sh') :
+      cygpath(path.join(global.dir.bash, 'start-vm.sh'));
     const ps = cross_os_open(startVm);
     pid.watch('startvm', () => {
-      global.log.info('VM has started');
+      global.log.info('(docksal-cli.js) startvm has finished');
       callback();
     });
   });
@@ -112,12 +133,11 @@ exports.vmStart = (callback) => {
  * @param {function()} callback
  */
 exports.webui = (callback) => {
-  global.log.debug('Starting WEBUI...');
   pid.create('webui', () => {
     const webuiStart = cygpath(path.join(global.dir.bash, 'webui.sh'));
     const ps = cross_os_open(webuiStart);
     pid.watch('webui', () => {
-      global.log.info('WEBUI has started');
+      global.log.info('(docksal-cli.js) WEBUI has started');
       callback();
     });
   });

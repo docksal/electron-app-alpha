@@ -20,24 +20,25 @@ switch (os.platform()) {
 const LOGFILE = path.join(LOGS_FOLDER, 'docksal-ui.log');
 const ERRFILE = path.join(LOGS_FOLDER, 'docksal-ui.err');
 
-let debugEnabled = false;
-let errorLevel = 0;
+exports.DEBUG_VERBOSE_LEVEL = 0;
+exports.DEBUG_LEVEL = 1;
+exports.INFO_LEVEL = 2;
+exports.WARN_LEVEL = 3;
+exports.ERROR_LEVEL = 4;
 
-const DEBUG = 0;
-const INFO = 1;
-const WARN = 2;
-const ERROR = 3;
+let debugEnabled = false;
+let errorLevel = exports.DEBUG_LEVEL;
 
 exports.log = (level, msg) => {
   if (!debugEnabled || errorLevel > level) return;
   let fileName = "";
-  let prefix;
-  (level == INFO) ? prefix = '<INFO> ' : 0;
-  (level == WARN) ? prefix = '<WARN> ' : 0;
-  (level == ERROR) ? prefix = '<ERROR> ' : 0;
+  let prefix = '';
+  (level == exports.INFO_LEVEL) && (prefix = '<INFO> ');
+  (level == exports.WARN_LEVEL) && (prefix = '<WARN> ' );
+  (level == exports.ERROR_LEVEL) && (prefix = '<ERROR> ');
   let line = fileName + prefix + msg + (msg[msg.length-1] == "\n" ? "" : "\n");
 
-  if (level < 3) {
+  if (level < exports.ERROR_LEVEL) {
     fs.writeFileSync(LOGFILE, line, {flag: 'a'});
   } else {
     fs.writeFileSync(ERRFILE, line, {flag: 'a'});
@@ -46,23 +47,29 @@ exports.log = (level, msg) => {
   console.log(line.trim());
 };
 
+exports.verbose = (msg) => {
+  msg = msg + '';
+  exports.log(exports.DEBUG_VERBOSE_LEVEL, msg);
+};
+
 exports.debug = (msg) => {
-  msg = msg + ''
-  exports.log(DEBUG, msg);
+  msg = msg + '';
+  exports.log(exports.DEBUG_LEVEL, msg);
 };
 
 exports.info = (msg) => {
-  msg = msg + ''
-  exports.log(INFO, msg);
+  msg = msg + '';
+  exports.log(exports.INFO_LEVEL, msg);
 };
 
 exports.warn = (msg) => {
-  msg = msg + ''
-  exports.log(WARN, msg);
+  msg = msg + '';
+  exports.log(exports.WARN_LEVEL, msg);
 };
 
 exports.error = (msg) => {
-  exports.log(ERROR, msg);
+  msg = msg + '';
+  exports.log(exports.ERROR_LEVEL, msg);
 };
 
 exports.start = () => {

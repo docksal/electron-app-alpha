@@ -22,7 +22,9 @@ exports.watch = (action, callback) => {
   try {
     fs.open(filename, 'r', (err, fd) => fd.close);
     let watcher = fs.watch(filename, {encoding: 'buffer'}, (eventType, filename) => {
-      if (eventType == 'rename') {
+      global.log.debug(`(pid-watcher.js) ${filename} event: ` + eventType);
+      // TODO: eventType == 'change' is here for Linux only. Check WTF its not rename
+      if (eventType == 'rename' || eventType == 'change') {
         watcher.close();
         callback(true);
       }

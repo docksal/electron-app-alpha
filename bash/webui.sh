@@ -5,7 +5,7 @@ if ( fin docker ps --format '{{.Names}}' | grep webui >/dev/null ); then
 	exit
 fi
 
-fin docker run -d --name webui --restart=always --privileged --userns=host \
+fin docker run -d --name docksal-webui --restart=always --privileged --userns=host \
 	--label "io.docksal.group=system" --label "io.docksal.virtual-host=webui.docksal" \
 	--env "VIRTUAL_HOST=webui.docksal" \
 	-v /:/rootfs:ro -v /var/run:/var/run:rw -v /sys:/sys:ro -v /var/lib/docker/:/var/lib/docker:ro \

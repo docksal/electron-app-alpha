@@ -23,6 +23,7 @@ let win;
 // Logging object
 global.log = require('./app/log');
 global.log.start(); // comment out line to stop logging
+//global.log.setErrorLevel(global.log.INFO_LEVEL);
 
 function appOnReady() {
   //createWindow();

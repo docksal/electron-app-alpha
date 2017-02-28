@@ -10,8 +10,8 @@ const browser = require('./browser');
 
 let appIcon = null;
 const iconOnline = path.join(global.dir.images, 'tray/macos/', 'icon.png');
-const iconOffline = path.join(global.dir.images, 'tray/macos/', 'icon-red.png');
-const iconHighlightPath = path.join(global.dir.images, 'iconHighlight.png');
+const iconOffline = path.join(global.dir.images, 'tray/macos/', 'icon-darkened.png');
+const iconHighlightPath = path.join(global.dir.images, 'tray/macos/', 'icon.png');;
 
 const isLinux = (process.platform === 'linux');
 
@@ -58,11 +58,11 @@ exports.create = () =>{
   overlay.show('Starting Docksal UI...');
   typeof app.dock != 'undefined' && app.dock.hide(); // hide from Dock
   appIcon = new Tray(iconOffline);
-  //appIcon.setPressedImage(iconHighlightPath);
+  appIcon.setPressedImage(iconHighlightPath);
 
   let contextMenu = Menu.buildFromTemplate([
     {
-      label: isLinux ? 'Start Docker' : 'Start VM',
+      label: 'Start Docker',
       enabled: false,
       click: function(){
         contextMenu.items[0].enabled = false; // disable self
@@ -72,7 +72,7 @@ exports.create = () =>{
       }
     },
     {
-      label: isLinux ? 'Stop Docker' : 'Stop VM',
+      label: 'Stop Docker',
       enabled: false,
       click: function() {
         contextMenu.items[1].enabled = false; // disable self
